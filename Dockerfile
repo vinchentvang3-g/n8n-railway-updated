@@ -1,6 +1,7 @@
 FROM n8nio/n8n:latest
 
-# Railway keeps secrets in service Variables. This image only adjusts runtime
-# permissions so n8n can write its config to the mounted volume.
 USER root
-RUN mkdir -p /home/node/.n8n && chown -R node:node /home/node/.n8n
+
+# Railway mounts the volume at runtime, so permissions must be adjusted after
+# the mount exists. Secrets stay in Railway Variables.
+ENTRYPOINT ["sh", "-c", "mkdir -p /home/node/.n8n && chmod -R 777 /home/node/.n8n && exec n8n start"]
